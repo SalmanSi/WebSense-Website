@@ -1616,6 +1616,7 @@
 
     @media (max-width: 1024px) {
       .rl-layout { grid-template-columns: 1fr; }
+      .ext-wrap { margin: 0 auto; max-width: 320px; }
     }
 
     /* ── SCROLL REVEAL ───────────────────────────────────────── */
@@ -1632,8 +1633,11 @@
 
     /* ── RESPONSIVE ──────────────────────────────────────────── */
     @media (max-width: 1024px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none !important; }
+      
       #hero { grid-template-columns: 1fr; padding: 100px 40px 60px; gap: 48px; }
-      .hero-right { display: none; }
+      .hero-right { display: flex; justify-content: center; width: 100%; margin-top: 20px; }
       .features-grid { grid-template-columns: 1fr 1fr; }
       .feature-card.featured { grid-column: span 2; }
       .steps-layout { grid-template-columns: 1fr; }
@@ -1644,16 +1648,32 @@
     }
 
     @media (max-width: 640px) {
-      nav { padding: 0 20px; }
-      .nav-links { display: none; }
-      #hero { padding: 90px 24px 48px; }
-      .section-inner { padding: 64px 24px; }
+      nav { padding: 0 16px; }
+      .nav-brand-text { font-size: 16px; }
+      .nav-github { padding: 6px 12px; font-size: 12px; }
+      
+      #hero { padding: 90px 20px 48px; gap: 32px; }
+      .hero-title { font-size: clamp(32px, 8vw, 44px); }
+      .hero-right { margin-top: 5px; }
+      .ext-wrap { max-width: 290px; }
+      
+      .section-inner { padding: 56px 20px; }
       .features-grid { grid-template-columns: 1fr; }
       .feature-card.featured { grid-column: span 1; }
+      
+      .models-table-head, .models-table-row { grid-template-columns: 2fr 1fr 1fr; padding: 12px 10px; font-size: 11px; }
+      .models-table-row strong { font-size: 12px; }
+      
+      .rl-steps { flex-direction: column; }
+      .rl-step { width: 100%; }
+      .rl-arrow { transform: rotate(90deg); margin: 4px 0; }
+      
       .install-grid { grid-template-columns: 1fr; }
+      .install-step { padding: 20px; }
+      
       footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px; }
-      .hero-stats { gap: 20px; flex-wrap: wrap; }
-      .cta-inner { padding: 60px 24px; }
+      .hero-stats { gap: 12px; flex-wrap: wrap; }
+      .cta-inner { padding: 50px 20px; }
     }
   </style>
 </head>
