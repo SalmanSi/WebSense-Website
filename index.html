@@ -1,0 +1,2785 @@
+<!DOCTYPE html><html lang="en" style="--teal: #2bc8d4;"><head>
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSense — Autonomous Web Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:       #2dd4bf;
+      --teal-dim:   #14b8a6;
+      --teal-glow:  rgba(45, 212, 191, 0.18);
+      --teal-soft:  rgba(45, 212, 191, 0.08);
+      --navy:       #0f172a;
+      --slate:      #1e293b;
+      --slate-mid:  #334155;
+      --slate-ui:   #475569;
+      --muted:      #64748b;
+      --text-body:  #94a3b8;
+      --text-main:  #e2e8f0;
+      --text-bright:#f8fafc;
+      --border:     rgba(255,255,255,0.07);
+      --border-teal:rgba(45, 212, 191, 0.22);
+      --card-bg:    rgba(30, 41, 59, 0.7);
+      --font-display: 'Syne', system-ui, sans-serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--navy);
+      color: var(--text-body);
+      line-height: 1.75;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    p, .feature-desc, .section-sub, .step-desc, .hero-desc {
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+    }
+
+    h1, h2, h3, .hero-title, .section-title, .feature-title {
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── NOISE OVERLAY ───────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 40px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-brand img {
+      height: 36px;
+      width: 36px;
+      object-fit: contain;
+    }
+
+    .nav-brand-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-bright);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-brand-text span { color: var(--teal); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-body);
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text-bright); background: rgba(255,255,255,0.05); }
+
+    .nav-github {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      background: var(--teal);
+      padding: 9px 18px;
+      border-radius: 999px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-github:hover {
+      background: #5eead4;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(45, 212, 191, 0.35);
+    }
+
+    /* ── SECTIONS WRAPPER ───────────────────────────────────── */
+    section { position: relative; z-index: 1; }
+
+    /* ── HERO ────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 60px;
+      padding: 120px 80px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero-grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(45,212,191,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,212,191,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-glow {
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,212,191,0.12) 0%, transparent 70%);
+      top: -200px;
+      right: -100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-left { display: flex; flex-direction: column; gap: 28px; }
+
+    /* Hero wordmark */
+    .hero-wordmark {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero-wordmark-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 14px;
+      box-shadow: 0 0 0 1px rgba(45,212,191,0.2), 0 8px 24px rgba(45,212,191,0.15);
+    }
+
+    .hero-wordmark-text {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .hero-wordmark-text em {
+      font-style: normal;
+      color: var(--teal);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal-soft);
+      border: 1px solid var(--border-teal);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: dotpulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dotpulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(44px, 5vw, 72px);
+      font-weight: 800;
+      color: var(--text-bright);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--teal);
+      position: relative;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-body);
+      max-width: 480px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--teal);
+      color: var(--navy);
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: #5eead4;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(45, 212, 191, 0.4);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-teal);
+      background: var(--teal-soft);
+      color: var(--teal);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      padding-top: 8px;
+    }
+
+    .hero-stat-value {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: -0.02em;
+    }
+
+    .hero-stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+
+    /* ── EXTENSION MOCKUP ───────────────────────────────────── */
+    .hero-right { display: flex; justify-content: center; align-items: center; }
+
+    .ext-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .ext-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -60px;
+      background: radial-gradient(ellipse at center, rgba(43,200,212,0.18) 0%, transparent 70%);
+      z-index: -1;
+      border-radius: 50%;
+    }
+
+    /* The extension panel itself — light theme matching screenshots */
+    .ext-panel {
+      background: linear-gradient(145deg, #f1f5ff, #ffffff 60%, #eef4ff);
+      border-radius: 20px;
+      border: 1px solid rgba(15,23,42,0.08);
+      overflow: hidden;
+      max-height: 620px;
+      display: flex;
+      flex-direction: column;
+      box-shadow:
+        0 40px 80px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(43,200,212,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Header */
+    .ext-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.6);
+      border-bottom: 1px solid rgba(15,23,42,0.06);
+    }
+
+    .ext-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ext-brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .ext-brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .ext-brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.2;
+    }
+
+    .ext-brand-sub {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 1px;
+    }
+
+    .ext-idle-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(37,99,235,0.1);
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(37,99,235,0.15);
+    }
+
+    .ext-status-strip {
+      margin: 10px 12px;
+      background: rgba(255,255,255,0.86);
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,0.07);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .ext-status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .ext-status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      flex-shrink: 0;
+    }
+
+    .ext-progress-track {
+      height: 5px;
+      background: rgba(148,163,184,0.2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .ext-progress-bar {
+      height: 100%;
+      width: 8%;
+      background: linear-gradient(90deg, #2563eb, #38bdf8);
+      border-radius: inherit;
+      transition: width 0.4s ease;
+    }
+
+    .ext-stages {
+      display: flex;
+      gap: 6px;
+    }
+
+    .ext-stage {
+      flex: 1;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      padding: 4px 0;
+      border-radius: 8px;
+      background: rgba(226,232,240,0.6);
+      letter-spacing: 0.03em;
+    }
+
+    .ext-stage.act {
+      color: #2563eb;
+      background: rgba(37,99,235,0.12);
+    }
+
+    .ext-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(226,232,240,0.35);
+      border-radius: 999px;
+      padding: 5px;
+      margin: 0 12px 10px;
+      flex-shrink: 0;
+    }
+
+    .ext-tab {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      color: #64748b;
+      cursor: default;
+    }
+
+    .ext-tab.active {
+      background: #fff;
+      color: #1d4ed8;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.12);
+    }
+
+    /* Chat panel */
+    .ext-panel-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,0.07);
+      padding: 14px;
+    }
+
+    .ext-panel-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 2px;
+    }
+
+    .ext-panel-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
+
+    .ext-clear-btn {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(37,99,235,0.2);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: #2563eb;
+      margin-bottom: 12px;
+    }
+
+    .ext-empty-msg {
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      padding: 8px 0 2px;
+    }
+
+    /* Composer */
+    .ext-composer {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,0.07);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ext-model-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #2563eb;
+      background: rgba(37,99,235,0.1);
+      width: fit-content;
+      white-space: nowrap;
+    }
+
+    .ext-model-pill strong { font-weight: 700; }
+
+    .ext-field-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 5px;
+    }
+
+    .ext-textarea {
+      width: 100%;
+      background: rgba(248,250,252,0.9);
+      border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+      min-height: 70px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .ext-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ext-ghost-btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(37,99,235,0.2);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #2563eb;
+      background: transparent;
+    }
+
+    .ext-btns-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .ext-abort-btn {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(37,99,235,0.2);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #2563eb;
+      background: transparent;
+    }
+
+    .ext-send-btn {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #6366f1);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(79,142,251,0.35);
+    }
+
+    /* Views */
+    .ext-view { display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: none; }
+    .ext-view::-webkit-scrollbar { display: none; }
+
+    #ext-view-chat { max-height: 440px; padding: 0 12px 12px; gap: 10px; }
+    #ext-view-history { max-height: 440px; padding: 0 12px 12px; }
+
+    /* History items */
+    .ext-history-item {
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(15,23,42,0.06);
+      background: rgba(248,250,252,0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .ext-history-status {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .ext-history-status.success {
+      background: rgba(22,163,74,0.12);
+      color: #16a34a;
+    }
+
+    .ext-history-status.error {
+      background: rgba(239,68,68,0.12);
+      color: #dc2626;
+    }
+
+    .ext-history-status.warning {
+      background: rgba(245,158,11,0.15);
+      color: #d97706;
+    }
+
+    .ext-history-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.4;
+    }
+
+    .ext-history-excerpt {
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    /* Settings scrollable area */
+    #ext-view-settings {
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 0 12px 12px;
+      scrollbar-width: none;
+    }
+
+    #ext-view-settings::-webkit-scrollbar { display: none; }
+
+    /* Tab transition */
+    .ext-view {
+      animation: extfadein 0.18s ease;
+    }
+
+    @keyframes extfadein {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Animated typing indicator on the active task */
+    .ext-typing-dots {
+      display: inline-flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .ext-typing-dots span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #2563eb;
+      animation: ext-typing 1.4s ease-in-out infinite;
+    }
+
+    .ext-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .ext-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes ext-typing {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── SECTION COMMON ─────────────────────────────────────── */
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 60px;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--teal);
+      border-radius: 1px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .section-title em { font-style: normal; color: var(--teal); }
+
+    .section-sub {
+      font-size: 17px;
+      color: var(--text-body);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── DIVIDER ─────────────────────────────────────────────── */
+    .divider {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── FEATURES ────────────────────────────────────────────── */
+    #features { background: linear-gradient(180deg, var(--navy) 0%, #0d1929 100%); }
+
+    /* ── NEW FEATURES LAYOUT ───────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: auto;
+      gap: 16px;
+      margin-top: 56px;
+    }
+
+    /* Each card occupies different column spans for an editorial layout */
+    .fc { 
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fc:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Accent bar at top of each card */
+    .fc::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .fc-teal::before   { background: linear-gradient(90deg, var(--teal), #38bdf8); }
+    .fc-indigo::before { background: linear-gradient(90deg, #6366f1, #a78bfa); }
+    .fc-orange::before { background: linear-gradient(90deg, #f97316, #fbbf24); }
+    .fc-pink::before   { background: linear-gradient(90deg, #ec4899, #f43f5e); }
+    .fc-green::before  { background: linear-gradient(90deg, #22c55e, #4ade80); }
+    .fc-sky::before    { background: linear-gradient(90deg, #38bdf8, #818cf8); }
+
+    .fc:hover { border-color: rgba(255,255,255,0.12); }
+    .fc-teal:hover   { box-shadow: 0 16px 40px rgba(45,212,191,0.12); }
+    .fc-indigo:hover { box-shadow: 0 16px 40px rgba(99,102,241,0.12); }
+    .fc-orange:hover { box-shadow: 0 16px 40px rgba(249,115,22,0.1); }
+    .fc-pink:hover   { box-shadow: 0 16px 40px rgba(236,72,153,0.1); }
+    .fc-green:hover  { box-shadow: 0 16px 40px rgba(34,197,94,0.1); }
+    .fc-sky:hover    { box-shadow: 0 16px 40px rgba(56,189,248,0.1); }
+
+    /* Column spans */
+    .fc-span-7 { grid-column: span 7; }
+    .fc-span-5 { grid-column: span 5; }
+    .fc-span-4 { grid-column: span 4; }
+    .fc-span-8 { grid-column: span 8; }
+    .fc-span-6 { grid-column: span 6; }
+
+    .fc-num {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      color: var(--text-bright);
+    }
+
+    .fc-icon-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .fc-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .fc-icon svg { width: 18px; height: 18px; }
+
+    .fc-icon-teal   { background: rgba(45,212,191,0.12);  border: 1px solid rgba(45,212,191,0.2); }
+    .fc-icon-indigo { background: rgba(99,102,241,0.12);  border: 1px solid rgba(99,102,241,0.2); }
+    .fc-icon-orange { background: rgba(249,115,22,0.12);  border: 1px solid rgba(249,115,22,0.2); }
+    .fc-icon-pink   { background: rgba(236,72,153,0.12);  border: 1px solid rgba(236,72,153,0.2); }
+    .fc-icon-green  { background: rgba(34,197,94,0.12);   border: 1px solid rgba(34,197,94,0.2); }
+    .fc-icon-sky    { background: rgba(56,189,248,0.12);  border: 1px solid rgba(56,189,248,0.2); }
+
+    .fc-icon-teal   svg { stroke: var(--teal); }
+    .fc-icon-indigo svg { stroke: #818cf8; }
+    .fc-icon-orange svg { stroke: #fb923c; }
+    .fc-icon-pink   svg { stroke: #f472b6; }
+    .fc-icon-green  svg { stroke: #4ade80; }
+    .fc-icon-sky    svg { stroke: #38bdf8; }
+
+    .fc-label {
+      display: inline-flex;
+      width: fit-content;
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .fc-label-teal   { background: rgba(45,212,191,0.12); color: var(--teal); }
+    .fc-label-indigo { background: rgba(99,102,241,0.12); color: #a5b4fc; }
+    .fc-label-orange { background: rgba(249,115,22,0.12); color: #fdba74; }
+    .fc-label-pink   { background: rgba(236,72,153,0.12); color: #f9a8d4; }
+    .fc-label-green  { background: rgba(34,197,94,0.12);  color: #86efac; }
+    .fc-label-sky    { background: rgba(56,189,248,0.12); color: #7dd3fc; }
+
+    .fc-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .fc-desc {
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.75;
+      flex: 1;
+    }
+
+    .fc-big-num {
+      font-family: var(--font-display);
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-top: auto;
+    }
+
+    .fc-teal   .fc-big-num { color: var(--teal); }
+    .fc-indigo .fc-big-num { color: #818cf8; }
+    .fc-orange .fc-big-num { color: #fb923c; }
+    .fc-green  .fc-big-num { color: #4ade80; }
+
+    /* Legacy aliases so responsive CSS still works */
+    .feature-card { display: none; }
+
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .fc-span-7, .fc-span-5, .fc-span-8, .fc-span-4, .fc-span-6 { grid-column: span 2; }
+    }
+
+    @media (max-width: 640px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .fc-span-7, .fc-span-5, .fc-span-8, .fc-span-4, .fc-span-6 { grid-column: span 1; }
+    }
+
+    /* ── HOW IT WORKS ─────────────────────────────────────────── */
+    #how { background: #0d1929; }
+
+    .steps-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 56px;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--teal-soft);
+      border: 1px solid var(--border-teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--teal);
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .step.active .step-num {
+      background: var(--teal);
+      color: var(--navy);
+    }
+
+    .step-content {}
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    .steps-visual {
+      position: relative;
+    }
+
+    .steps-terminal {
+      background: #0f1b2d;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.4);
+    }
+
+    .terminal-bar {
+      background: #141f2e;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .terminal-bar span:first-child {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      flex: 1;
+    }
+
+    .terminal-body {
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      min-height: 280px;
+    }
+
+    .t-line { display: flex; gap: 10px; align-items: flex-start; }
+    .t-prompt { color: var(--teal); flex-shrink: 0; }
+    .t-cmd { color: var(--text-main); }
+    .t-comment { color: var(--muted); }
+    .t-out { color: #94a3b8; padding-left: 18px; }
+    .t-success { color: #4ade80; padding-left: 18px; }
+    .t-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      background: var(--teal);
+      border-radius: 1px;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── MODELS ──────────────────────────────────────────────── */
+    #models { background: linear-gradient(180deg, #0d1929 0%, var(--navy) 100%); }
+
+    .models-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 56px;
+    }
+
+    .models-table {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .models-table-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .models-table-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .models-table-row:last-child { border-bottom: none; }
+    .models-table-row:hover { background: rgba(255,255,255,0.02); }
+
+    .models-table-row strong {
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .model-provider-badge {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-openai { background: rgba(16,163,127,0.15); color: #34d399; }
+    .badge-google { background: rgba(66,133,244,0.15); color: #93c5fd; }
+    .badge-anthropic { background: rgba(215,151,100,0.15); color: #fdba74; }
+    .badge-meta { background: rgba(59,130,246,0.15); color: #7dd3fc; }
+    .badge-qwen { background: rgba(168,85,247,0.15); color: #d8b4fe; }
+    .badge-local { background: rgba(45,212,191,0.12); color: var(--teal); }
+
+    .models-right { display: flex; flex-direction: column; gap: 20px; }
+
+    .model-feature-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .model-feature-row:hover { border-color: var(--border-teal); }
+
+    .model-feature-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+      margin-top: 5px;
+      box-shadow: 0 0 0 3px rgba(45,212,191,0.15);
+    }
+
+    .model-feature-text strong {
+      display: block;
+      color: var(--text-bright);
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .model-feature-text p {
+      font-size: 13px;
+      color: var(--text-body);
+    }
+
+    /* ── INSTALL ─────────────────────────────────────────────── */
+    #install { background: var(--navy); }
+
+    .install-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 56px;
+    }
+
+    .install-step {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .install-step:hover {
+      border-color: var(--border-teal);
+      transform: translateY(-3px);
+    }
+
+    .install-step::after {
+      content: '→';
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 18px;
+      z-index: 2;
+    }
+
+    .install-step:last-child::after { display: none; }
+
+    .install-step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--teal-soft);
+      border: 1px solid var(--border-teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--teal);
+    }
+
+    .install-step-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+
+    .install-step-desc {
+      font-size: 13px;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    .install-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--teal);
+      background: rgba(45,212,191,0.07);
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(45,212,191,0.12);
+      word-break: break-all;
+    }
+
+    /* ── CTA ─────────────────────────────────────────────────── */
+    #cta {
+      background: linear-gradient(180deg, var(--navy) 0%, #0a1628 100%);
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 60px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 60px);
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .cta-title em { font-style: normal; color: var(--teal); }
+
+    .cta-sub {
+      font-size: 17px;
+      color: var(--text-body);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────────── */
+    footer {
+      background: #0a1628;
+      border-top: 1px solid var(--border);
+      padding: 32px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 100%;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-body);
+    }
+
+    .footer-brand span { color: var(--teal); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--teal); }
+
+    /* ── FINE-TUNED MODEL SECTION ───────────────────────────── */
+    #model-ft { background: linear-gradient(180deg, var(--navy) 0%, #0a1628 100%); }
+
+    .rl-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 56px;
+      align-items: start;
+    }
+
+    .rl-pipeline {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .rl-pipeline-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .rl-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rl-step {
+      flex: 1;
+      min-width: 80px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      transition: border-color 0.3s, background 0.3s;
+      cursor: default;
+    }
+
+    .rl-step:hover { border-color: var(--border-teal); background: var(--teal-soft); }
+    .rl-step-highlight { border-color: var(--border-teal); background: var(--teal-soft); }
+
+    .rl-step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--teal-soft);
+      border: 1px solid var(--border-teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rl-step-icon svg { width: 16px; height: 16px; stroke: var(--teal); }
+    .rl-step-highlight .rl-step-icon { background: rgba(45,212,191,0.2); }
+    .rl-step-label { font-size: 11px; font-weight: 700; color: var(--text-bright); line-height: 1.3; }
+    .rl-step-sub { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+    .rl-arrow { color: var(--muted); font-size: 18px; flex-shrink: 0; }
+
+    .rl-feedback-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rl-feedback-arrow svg { width: 100%; }
+    .rl-feedback-arrow span { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    .rl-right { display: flex; flex-direction: column; gap: 20px; }
+
+    .rl-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .rl-stat {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .rl-stat:hover { border-color: var(--border-teal); transform: translateY(-2px); }
+
+    .rl-stat-value {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--teal);
+      letter-spacing: -0.02em;
+    }
+
+    .rl-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+    .rl-feature-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .rl-feature {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .rl-feature:hover { border-color: var(--border-teal); }
+
+    .rl-feature-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+      margin-top: 5px;
+      box-shadow: 0 0 0 3px rgba(45,212,191,0.15);
+    }
+
+    .rl-feature strong { display: block; font-size: 13px; font-weight: 700; color: var(--text-bright); margin-bottom: 4px; }
+    .rl-feature p { font-size: 12px; color: var(--text-body); line-height: 1.6; }
+
+    .hf-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(255,210,30,0.08), rgba(255,210,30,0.03));
+      border: 1px solid rgba(255,210,30,0.25);
+      border-radius: 16px;
+      padding: 18px 20px;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .hf-card:hover {
+      border-color: rgba(255,210,30,0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(255,210,30,0.12);
+    }
+
+    .hf-card-left { display: flex; align-items: center; gap: 14px; }
+
+    .hf-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255,210,30,0.1);
+      border: 1px solid rgba(255,210,30,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .hf-card-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text-bright); margin-bottom: 3px; }
+    .hf-card-sub { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+    .hf-card-arrow { color: rgba(255,210,30,0.6); transition: color 0.2s; }
+    .hf-card:hover .hf-card-arrow { color: #FFD21E; }
+
+    /* ── ENHANCED ANIMATIONS ────────────────────────────────── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(80px);
+      will-change: transform;
+    }
+
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.3;
+    }
+
+    .feature-card { position: relative; overflow: hidden; }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(105deg, transparent 40%, rgba(45,212,191,0.05) 50%, transparent 60%);
+      background-size: 200% 100%;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .feature-card:hover::before { opacity: 1; animation: shimmer-card 0.9s ease forwards; }
+
+    @keyframes shimmer-card {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+
+    .steps-terminal { position: relative; overflow: hidden; }
+    .steps-terminal::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(45,212,191,0.5), transparent);
+      animation: linescan 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes linescan {
+      0%   { top: 0%;   opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 0.6; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .hero-badge-dot { position: relative; }
+    .hero-badge-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--teal);
+      animation: ringgrow 2s ease-out infinite;
+    }
+
+    @keyframes ringgrow {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.8); opacity: 0; }
+    }
+
+    .glow-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      opacity: 0.25;
+    }
+
+    @media (max-width: 1024px) {
+      .rl-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── SCROLL REVEAL ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      #hero { grid-template-columns: 1fr; padding: 100px 40px 60px; gap: 48px; }
+      .hero-right { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .feature-card.featured { grid-column: span 2; }
+      .steps-layout { grid-template-columns: 1fr; }
+      .steps-visual { display: none; }
+      .models-intro { grid-template-columns: 1fr; gap: 40px; }
+      .install-grid { grid-template-columns: 1fr 1fr; }
+      .install-step::after { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      #hero { padding: 90px 24px 48px; }
+      .section-inner { padding: 64px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card.featured { grid-column: span 1; }
+      .install-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px; }
+      .hero-stats { gap: 20px; flex-wrap: wrap; }
+      .cta-inner { padding: 60px 24px; }
+    }
+  </style>
+</head>
+<body style="font-family: &quot;DM Mono&quot;;">
+
+<!-- Background elements -->
+<div class="hero-grid-bg"></div>
+<div class="hero-glow"></div>
+<canvas id="particle-canvas" width="1096" height="650"></canvas>
+<div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,rgba(45,212,191,0.12),transparent 70%);top:-200px;right:-100px;animation-duration:18s"></div>
+<div class="orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(129,140,248,0.1),transparent 70%);bottom:20%;left:-100px;animation-duration:24s;animation-delay:-8s"></div>
+<div class="orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(249,115,22,0.07),transparent 70%);bottom:5%;right:10%;animation-duration:20s;animation-delay:-4s"></div>
+
+<!-- ── NAV ─────────────────────────────────────────── -->
+<nav>
+  <a class="nav-brand" href="#hero">
+    <img src="assets/logo.png" alt="WebSense logo">
+    <span class="nav-brand-text">Web<span>Sense</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#models">Models</a></li>
+    <li><a href="#model-ft">Model</a></li>
+    <li><a href="#install">Install</a></li>
+  </ul>
+  <a class="nav-github" href="https://github.com/SalmanSi/FYP-WebNav-Agent" target="_blank" rel="noopener">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"></path></svg>
+    GitHub
+  </a>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-left reveal visible">
+    <div class="hero-wordmark">
+      <img src="assets/logo.png" alt="WebSense" class="hero-wordmark-logo" />
+      <span class="hero-wordmark-text">Web<em>Sense</em></span>
+    </div>
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Autonomous Web Intelligence
+    </div>
+    <h1 class="hero-title">
+      <span class="word" style="animation-delay: 0.1s;">Browse</span> <span class="word" style="animation-delay: 0.19s;">smarter.</span><br>
+      <span class="word" style="animation-delay: 0.28s;">Let</span> <span class="word" style="animation-delay: 0.37s;">AI</span> <em><span class="word" style="animation-delay: 0.46s;">navigate</span></em><br>
+      <span class="word" style="animation-delay: 0.55s;">for</span> <span class="word" style="animation-delay: 0.64s;">you.</span>
+    </h1>
+    <p class="hero-desc">
+      WebSense is a Chrome extension that turns natural language instructions into real browser actions — powered by GPT, Gemini, Claude, or your own local model.
+    </p>
+    <div class="hero-actions">
+      <a href="#install" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Install Extension
+      </a>
+      <a href="https://github.com/SalmanSi/FYP-WebNav-Agent" class="btn-secondary" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"></path></svg>
+        View on GitHub
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-value">10+</div>
+        <div class="hero-stat-label">AI Models</div>
+      </div>
+      <div>
+        <div class="hero-stat-value">3</div>
+        <div class="hero-stat-label">Inference Providers</div>
+      </div>
+      <div>
+        <div class="hero-stat-value">100%</div>
+        <div class="hero-stat-label">Local-capable</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right reveal visible" style="transition-delay: 0.15s">
+    <div class="ext-wrap">
+      <div class="ext-panel">
+
+        <!-- Header -->
+        <div class="ext-header">
+          <div class="ext-brand">
+            <div class="ext-brand-logo">
+              <img src="assets/logo.png" alt="Web Sense">
+            </div>
+            <div>
+              <div class="ext-brand-name">Web Sense</div>
+              <div class="ext-brand-sub">Autonomous web navigation assistant</div>
+            </div>
+          </div>
+          <div class="ext-idle-badge">Idle</div>
+        </div>
+
+        <!-- Status strip -->
+        <div class="ext-status-strip">
+          <div class="ext-status-row">
+            <div class="ext-status-dot"></div>
+            <span>Ready for your next task.</span>
+          </div>
+          <div class="ext-progress-track">
+            <div class="ext-progress-bar" id="ext-progress"></div>
+          </div>
+          <div class="ext-stages">
+            <div class="ext-stage" id="ext-stage-load">Load</div>
+            <div class="ext-stage" id="ext-stage-think">Think</div>
+            <div class="ext-stage" id="ext-stage-act">Act</div>
+          </div>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="ext-tabs" id="ext-tab-bar">
+          <div class="ext-tab active" data-ext-tab="chat" style="cursor: pointer;">Chat</div>
+          <div class="ext-tab" data-ext-tab="history" style="cursor: pointer;">History</div>
+          <div class="ext-tab" data-ext-tab="settings" style="cursor: pointer;">Settings</div>
+        </div>
+
+        <!-- ── CHAT VIEW ── -->
+        <div class="ext-view" id="ext-view-chat">
+          <!-- Live conversation panel -->
+          <div class="ext-panel-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <div>
+                <div class="ext-panel-title">Live conversation</div>
+                <div class="ext-panel-sub">Follow the agent's thought process in real time.</div>
+              </div>
+              <div class="ext-clear-btn">CLEAR</div>
+            </div>
+            <div class="ext-empty-msg" id="ext-chat-empty">No messages yet. Start by sending a task.</div>
+            <div id="ext-chat-feed" style="display:none; flex-direction:column; gap:8px;"></div>
+          </div>
+          <!-- Composer -->
+          <div class="ext-composer">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="ext-panel-title">New task</div>
+                <div class="ext-panel-sub">Describe what you'd like the agent to accomplish.</div>
+              </div>
+              <div class="ext-model-pill">Model: <strong>openai/gpt-4o</strong></div>
+            </div>
+            <div>
+              <div class="ext-field-label">Task instructions</div>
+              <div class="ext-textarea" id="ext-task-input">Write a task for the agent to perform</div>
+            </div>
+            <div class="ext-actions">
+              <div class="ext-abort-btn">ABORT TASK</div>
+              <div class="ext-send-btn" id="ext-send-btn">Send to agent</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── HISTORY VIEW ── -->
+        <div class="ext-view" id="ext-view-history" style="display:none">
+          <div class="ext-panel-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <div>
+                <div class="ext-panel-title">Task history</div>
+                <div class="ext-panel-sub">Review recent instructions and outcomes.</div>
+              </div>
+              <div class="ext-clear-btn">CLEAR ALL</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="ext-history-item ext-history-success">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                  <div class="ext-history-status success">Completed</div>
+                  <div style="font-size:10px;color:#94a3b8">2 min ago</div>
+                </div>
+                <div class="ext-history-title">Find the latest release and summarize changelog</div>
+                <div class="ext-history-excerpt">Navigated to releases page, found v2.1.0, extracted changelog.</div>
+              </div>
+              <div class="ext-history-item ext-history-success">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                  <div class="ext-history-status success">Completed</div>
+                  <div style="font-size:10px;color:#94a3b8">18 min ago</div>
+                </div>
+                <div class="ext-history-title">Search for cheapest flight to Dubai next Friday</div>
+                <div class="ext-history-excerpt">Opened Google Flights, applied filters, found 3 options.</div>
+              </div>
+              <div class="ext-history-item ext-history-error">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                  <div class="ext-history-status error">Failed</div>
+                  <div style="font-size:10px;color:#94a3b8">1 hr ago</div>
+                </div>
+                <div class="ext-history-title">Fill out the contact form on acme.com</div>
+                <div class="ext-history-excerpt">Could not locate the submit button — page layout changed.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SETTINGS VIEW ── -->
+        <div class="ext-view" id="ext-view-settings" style="display:none">
+          <!-- Model selection -->
+          <div class="ext-panel-card" style="margin-bottom:0">
+            <div class="ext-panel-title" style="margin-bottom:2px">Model selection</div>
+            <div class="ext-panel-sub" style="margin-bottom:10px">All models via OpenRouter — one API key, hundreds of models.</div>
+            <div class="ext-field-label">Model (OpenRouter ID)</div>
+            <div class="ext-settings-input" style="display:flex;gap:6px;margin-bottom:6px">
+              <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;font-family:'DM Mono',monospace">openai/gpt-4o</div>
+            </div>
+            <div style="background:rgba(226,232,240,0.4);border-radius:8px;padding:8px 10px;font-size:10px;color:#64748b">Type any OpenRouter model ID or pick from suggestions.</div>
+          </div>
+
+          <!-- API Key -->
+          <div class="ext-panel-card" style="margin-top:8px;margin-bottom:0">
+            <div class="ext-panel-title" style="margin-bottom:2px">API key</div>
+            <div class="ext-panel-sub" style="margin-bottom:10px">Stored locally in your browser — never leaves your machine.</div>
+            <div style="background:rgba(248,250,252,0.92);border:1px solid rgba(15,23,42,0.04);border-radius:12px;padding:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span style="font-size:12px;font-weight:600;color:#64748b">OpenRouter key</span>
+                <span style="font-size:11px;color:#16a34a;font-weight:600">✓ Saved</span>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#94a3b8;font-family:'DM Mono',monospace">sk-or-v1-••••••••••••••</div>
+                <div style="padding:8px 12px;border-radius:10px;background:rgba(37,99,235,0.12);color:#1d4ed8;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">Save</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ollama -->
+          <div class="ext-panel-card" style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <div>
+                <div class="ext-panel-title">Local models (Ollama)</div>
+                <div class="ext-panel-sub">Connect to a local Ollama runtime.</div>
+              </div>
+              <div style="display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;background:rgba(14,166,97,0.1);border:1px solid rgba(14,166,97,0.2);font-size:10px;font-weight:600;color:#16a34a;">
+                <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+                3 model(s)
+              </div>
+            </div>
+            <div class="ext-field-label">Ollama URL</div>
+            <div style="display:flex;gap:6px;margin-bottom:8px">
+              <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;font-family:'DM Mono',monospace">http://localhost:11434</div>
+              <div style="padding:8px 10px;border-radius:10px;background:rgba(37,99,235,0.12);color:#1d4ed8;font-size:11px;font-weight:600;cursor:pointer">Connect</div>
+            </div>
+            <div class="ext-field-label">Model</div>
+            <div style="background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-family:'DM Mono',monospace">qwen2.5:0.5b</span>
+              <span style="color:#94a3b8;font-size:10px">▾</span>
+            </div>
+            <div class="ext-field-label">Use for agent tasks</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+              <div id="ext-ollama-toggle" style="width:30px;height:17px;border-radius:999px;background:#2563eb;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;">
+                <div style="position:absolute;top:2px;left:15px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:left 0.2s"></div>
+              </div>
+              <span style="font-size:11px;color:#64748b" id="ext-ollama-label">Enabled — agent uses Ollama</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ─────────────────────────────────────── -->
+<div class="glow-divider"></div>
+<section id="features">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Capabilities</div>
+      <h2 class="section-title">Everything you need to<br><em>automate the web</em></h2>
+      <p class="section-sub">From a simple side panel to full on-device inference — WebSense gives you precise control over how AI interacts with your browser.</p>
+    </div>
+
+    <div class="features-grid">
+
+      <!-- Row 1: Big hero card (7) + stat card (5) -->
+      <div class="fc fc-teal fc-span-7 reveal" style="transition-delay:0.05s">
+        <div class="fc-num">01</div>
+        <div class="fc-icon-row">
+          <div class="fc-icon fc-icon-teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/><circle cx="13" cy="6" r="1" fill="currentColor"/></svg>
+          </div>
+          <span class="fc-label fc-label-teal">Core</span>
+        </div>
+        <div class="fc-title">Side Panel Workspace</div>
+        <div class="fc-desc">The agent lives in Chrome's persistent side panel — always visible as you navigate between tabs. Watch it think, plan, and act in real time with a live conversation feed showing every decision it makes.</div>
+      </div>
+
+      <div class="fc fc-indigo fc-span-5 reveal" style="transition-delay:0.1s; justify-content:space-between;">
+        <div>
+          <div class="fc-num">02</div>
+          <div class="fc-icon fc-icon-indigo" style="margin-top:12px">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div class="fc-title" style="margin-top:14px">100+ AI Models</div>
+          <div class="fc-desc" style="margin-top:8px">One OpenRouter key — GPT, Gemini, Claude, Llama, Qwen, DeepSeek and more.</div>
+        </div>
+        <div class="fc-big-num">100<span style="font-size:28px;opacity:0.5">+</span></div>
+      </div>
+
+      <!-- Row 2: three equal cards -->
+      <div class="fc fc-orange fc-span-4 reveal" style="transition-delay:0.12s">
+        <div class="fc-num">03</div>
+        <div class="fc-icon fc-icon-orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="fc-title">Instant Abort</div>
+        <div class="fc-desc">Kill any in-flight task immediately. No reloads, no waiting — full control at any moment.</div>
+      </div>
+
+      <div class="fc fc-sky fc-span-4 reveal" style="transition-delay:0.16s">
+        <div class="fc-num">04</div>
+        <div class="fc-icon fc-icon-sky">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="fc-title">Element Highlighting</div>
+        <div class="fc-desc">Every interactive element gets a numbered overlay — the agent references them by ID, not by guess.</div>
+      </div>
+
+      <div class="fc fc-pink fc-span-4 reveal" style="transition-delay:0.2s">
+        <div class="fc-num">05</div>
+        <div class="fc-icon fc-icon-pink">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="fc-title">API Key Locker</div>
+        <div class="fc-desc">Keys live in <code style="font-family:var(--font-mono);font-size:12px;color:#f9a8d4">chrome.storage</code>. Nothing ever leaves your machine.</div>
+      </div>
+
+      <!-- Row 3: wide + narrow -->
+      <div class="fc fc-green fc-span-8 reveal" style="transition-delay:0.22s; flex-direction:row; align-items:center; gap:32px;">
+        <div style="flex:1">
+          <div class="fc-num">06</div>
+          <div class="fc-icon fc-icon-green" style="margin-top:12px">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="fc-title" style="margin-top:14px">Local Inference</div>
+          <div class="fc-desc" style="margin-top:8px">Ollama and llama.cpp support — full on-device inference with zero API key and zero data leakage.</div>
+        </div>
+        <div style="flex-shrink:0;text-align:center">
+          <div style="font-family:var(--font-display);font-size:13px;font-weight:700;color:#4ade80;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px">Privacy</div>
+          <div style="font-family:var(--font-display);font-size:40px;font-weight:800;color:#4ade80;letter-spacing:-0.03em;line-height:1">100%</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">data stays local</div>
+        </div>
+      </div>
+
+      <div class="fc fc-teal fc-span-4 reveal" style="transition-delay:0.26s; background: linear-gradient(135deg, rgba(45,212,191,0.1), rgba(30,41,59,0.8));">
+        <div class="fc-num">07</div>
+        <div class="fc-icon fc-icon-teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="fc-title">Task History</div>
+        <div class="fc-desc">Every task logged — status, timestamps, outcomes. Replay or learn from any run.</div>
+        <div style="margin-top:auto;display:flex;gap:6px;flex-wrap:wrap">
+          <span style="padding:4px 9px;border-radius:4px;font-size:10px;font-weight:700;background:rgba(45,212,191,0.1);color:var(--teal)">Completed</span>
+          <span style="padding:4px 9px;border-radius:4px;font-size:10px;font-weight:700;background:rgba(239,68,68,0.1);color:#f87171">Failed</span>
+          <span style="padding:4px 9px;border-radius:4px;font-size:10px;font-weight:700;background:rgba(245,158,11,0.1);color:#fbbf24">Running</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ─────────────────────────────────── -->
+<section id="how">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">From instruction<br>to <em>action</em></h2>
+      <p class="section-sub">WebSense breaks every task into three clean phases: capture, reason, act.</p>
+    </div>
+
+    <div class="steps-layout">
+      <div class="steps-list reveal" style="transition-delay:0.1s">
+        <div class="step active" data-step="0">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-title">Capture the page</div>
+            <div class="step-desc">WebSense snapshots the full DOM — every interactive element gets a stable ID and numbered overlay so the AI knows exactly what it can click, type, or navigate to.</div>
+          </div>
+        </div>
+        <div class="step" data-step="1">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-title">Think &amp; Plan</div>
+            <div class="step-desc">Your task and the page snapshot are sent to the selected AI model. It reasons step-by-step and produces a structured action plan — visible live in the conversation feed.</div>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-title">Execute actions</div>
+            <div class="step-desc">The backend translates the AI's plan into real browser actions via Chrome scripting — clicks, form fills, navigation — up to 12 steps per task, with a pause between each.</div>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <div class="step-title">Review &amp; Improve</div>
+            <div class="step-desc">After each task, rate the outcome. Successful trajectories are saved as memory; failed ones become lessons that make future runs smarter.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps-visual reveal" style="transition-delay:0.2s">
+        <div class="steps-terminal">
+          <div class="terminal-bar">
+            <span>websense — agent session</span>
+            <div class="browser-dots" style="gap:5px">
+              <span style="width:9px;height:9px"></span>
+              <span style="width:9px;height:9px"></span>
+              <span style="width:9px;height:9px"></span>
+            </div>
+          </div>
+          <div class="terminal-body">
+            <div class="t-line"><span class="t-prompt">→</span><span class="t-cmd">Capturing page: github.com/releases</span></div>
+            <div class="t-line"><span class="t-out">Found 47 interactive elements</span></div>
+            <div class="t-line"><span class="t-out">DOM snapshot: 12.4 KB</span></div>
+            <br>
+            <div class="t-line"><span class="t-prompt">→</span><span class="t-cmd">Sending to <span style="color:var(--teal)">gpt-4o</span> via OpenRouter</span></div>
+            <div class="t-line"><span class="t-out">Reasoning… <span style="color:#818cf8">thinking</span></span></div>
+            <div class="t-line"><span class="t-out">Actions planned: 3</span></div>
+            <br>
+            <div class="t-line"><span class="t-prompt">→</span><span class="t-cmd">Step 1: click [#14] "Releases"</span></div>
+            <div class="t-line"><span class="t-success">✓ Navigation complete</span></div>
+            <div class="t-line"><span class="t-prompt">→</span><span class="t-cmd">Step 2: click [#3] "v2.1.0"</span></div>
+            <div class="t-line"><span class="t-success">✓ Release page loaded</span></div>
+            <div class="t-line"><span class="t-prompt">→</span><span class="t-cmd">Step 3: extract changelog text</span></div>
+            <div class="t-line"><span class="t-success">✓ Copied to clipboard</span></div>
+            <br>
+            <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd"><span class="t-cursor"></span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MODELS ──────────────────────────────────────── -->
+<section id="models">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">AI Models</div>
+      <h2 class="section-title">Your model,<br><em>your choice</em></h2>
+      <p class="section-sub">Use the cloud models you trust or run everything locally. WebSense adapts to however you want to work.</p>
+    </div>
+
+    <div class="models-intro">
+      <div class="models-table reveal" style="transition-delay:0.1s">
+        <div class="models-table-head">
+          <span>Model</span>
+          <span>Provider</span>
+          <span>Type</span>
+        </div>
+        <div class="models-table-row">
+          <strong>GPT-4o</strong>
+          <span><span class="model-provider-badge badge-openai">OpenAI</span></span>
+          <span style="color:var(--text-body);font-size:12px">Cloud</span>
+        </div>
+        <div class="models-table-row">
+          <strong>Gemini 2.5 Pro</strong>
+          <span><span class="model-provider-badge badge-google">Google</span></span>
+          <span style="color:var(--text-body);font-size:12px">Cloud</span>
+        </div>
+        <div class="models-table-row">
+          <strong>Claude Sonnet 4</strong>
+          <span><span class="model-provider-badge badge-anthropic">Anthropic</span></span>
+          <span style="color:var(--text-body);font-size:12px">Cloud</span>
+        </div>
+        <div class="models-table-row">
+          <strong>Llama 4 Maverick</strong>
+          <span><span class="model-provider-badge badge-meta">Meta</span></span>
+          <span style="color:var(--text-body);font-size:12px">Cloud</span>
+        </div>
+        <div class="models-table-row">
+          <strong>Qwen3 235B</strong>
+          <span><span class="model-provider-badge badge-qwen">Qwen</span></span>
+          <span style="color:var(--text-body);font-size:12px">Cloud</span>
+        </div>
+        <div class="models-table-row">
+          <strong>DeepSeek R1</strong>
+          <span><span class="model-provider-badge badge-qwen">DeepSeek</span></span>
+          <span style="color:var(--text-body);font-size:12px">Cloud</span>
+        </div>
+        <div class="models-table-row">
+          <strong>Ollama (any)</strong>
+          <span><span class="model-provider-badge badge-local">Local</span></span>
+          <span style="color:var(--teal);font-size:12px;font-weight:600">On-device</span>
+        </div>
+        <div class="models-table-row">
+          <strong>llama.cpp (any)</strong>
+          <span><span class="model-provider-badge badge-local">Local</span></span>
+          <span style="color:var(--teal);font-size:12px;font-weight:600">On-device</span>
+        </div>
+      </div>
+
+      <div class="models-right reveal" style="transition-delay:0.2s">
+        <div class="model-feature-row">
+          <div class="model-feature-dot"></div>
+          <div class="model-feature-text">
+            <strong>OpenRouter — One key, all models</strong>
+            <p>A single OpenRouter API key gives you access to GPT, Gemini, Claude, Llama, Qwen and dozens more. Switch models without ever touching your settings again.</p>
+          </div>
+        </div>
+        <div class="model-feature-row">
+          <div class="model-feature-dot" style="background:#818cf8;box-shadow:0 0 0 3px rgba(129,140,248,0.15)"></div>
+          <div class="model-feature-text">
+            <strong>Fully local with Ollama</strong>
+            <p>Point WebSense at your local Ollama server. No API key, no data leaving your machine. Pull any model with <code style="font-family:var(--font-mono);font-size:12px;color:var(--teal)">ollama pull</code> and it appears instantly in the dropdown.</p>
+          </div>
+        </div>
+        <div class="model-feature-row">
+          <div class="model-feature-dot" style="background:#f97316;box-shadow:0 0 0 3px rgba(249,115,22,0.15)"></div>
+          <div class="model-feature-text">
+            <strong>llama.cpp server support</strong>
+            <p>Connect to a running llama.cpp server for even more control over quantization, context length, and hardware acceleration.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INSTALL ─────────────────────────────────────── -->
+<section id="install">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Get Started</div>
+      <h2 class="section-title">Up and running<br><em>in 4 steps</em></h2>
+      <p class="section-sub">No build step, no account required. Just clone, install, and load into Chrome.</p>
+    </div>
+
+    <div class="install-grid">
+      <div class="install-step reveal" style="transition-delay:0.05s">
+        <div class="install-step-num">1</div>
+        <div class="install-step-title">Start the backend</div>
+        <div class="install-step-desc">Clone the repo and run the FastAPI backend server.</div>
+        <div class="install-code">uvicorn main:app --reload</div>
+      </div>
+
+      <div class="install-step reveal" style="transition-delay:0.1s">
+        <div class="install-step-num">2</div>
+        <div class="install-step-title">Open Extensions</div>
+        <div class="install-step-desc">In Chrome, navigate to the extensions page and enable Developer Mode.</div>
+        <div class="install-code">chrome://extensions/</div>
+      </div>
+
+      <div class="install-step reveal" style="transition-delay:0.15s">
+        <div class="install-step-num">3</div>
+        <div class="install-step-title">Load Unpacked</div>
+        <div class="install-step-desc">Click "Load unpacked" and select the <code style="font-family:var(--font-mono);font-size:11px;color:var(--teal)">extension/</code> directory from the repo.</div>
+        <div class="install-code">Load unpacked → /extension</div>
+      </div>
+
+      <div class="install-step reveal" style="transition-delay:0.2s">
+        <div class="install-step-num">4</div>
+        <div class="install-step-title">Pin &amp; Go</div>
+        <div class="install-step-desc">Pin WebSense to your toolbar, click it to open the side panel, add your API key and start your first task.</div>
+        <div class="install-code">🧠 Ready for your next task.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINE-TUNED MODEL ───────────────────────────── -->
+<section id="model-ft">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Research &amp; Fine-Tuning</div>
+      <h2 class="section-title">On-device intelligence,<br><em>trained from scratch</em></h2>
+      <p class="section-sub">We fine-tuned Qwen3 1.7B using Proximal Policy Optimization — a reinforcement learning pipeline that teaches the model to navigate the web through trial, reward, and self-improvement. Performance rivals much larger cloud LLMs.</p>
+    </div>
+
+    <div class="rl-layout reveal" style="transition-delay:0.1s">
+
+      <!-- RL Pipeline diagram -->
+      <div class="rl-pipeline">
+        <div class="rl-pipeline-title">Reinforcement Learning Pipeline</div>
+        <div class="rl-steps">
+          <div class="rl-step">
+            <div class="rl-step-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M3 9h18"></path></svg>
+            </div>
+            <div class="rl-step-label">Web Environment</div>
+            <div class="rl-step-sub">Live DOM + interactive elements</div>
+          </div>
+          <div class="rl-arrow">→</div>
+          <div class="rl-step">
+            <div class="rl-step-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg>
+            </div>
+            <div class="rl-step-label">Policy (Qwen3 1.7B)</div>
+            <div class="rl-step-sub">Action selection via LLM</div>
+          </div>
+          <div class="rl-arrow">→</div>
+          <div class="rl-step">
+            <div class="rl-step-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            </div>
+            <div class="rl-step-label">Reward Signal</div>
+            <div class="rl-step-sub">Task completion &amp; efficiency</div>
+          </div>
+          <div class="rl-arrow">→</div>
+          <div class="rl-step rl-step-highlight">
+            <div class="rl-step-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </div>
+            <div class="rl-step-label">PPO Update</div>
+            <div class="rl-step-sub">Policy gradient optimisation</div>
+          </div>
+        </div>
+        <div class="rl-feedback-arrow">
+          <svg viewBox="0 0 300 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M280 12 H20 M20 12 l8-6 M20 12 l8 6" stroke="rgba(45,212,191,0.4)" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+          <span>Policy update feedback loop</span>
+        </div>
+      </div>
+
+      <!-- Stats + HF card -->
+      <div class="rl-right">
+        <div class="rl-stats-row">
+          <div class="rl-stat">
+            <div class="rl-stat-value">1.7B</div>
+            <div class="rl-stat-label">Parameters</div>
+          </div>
+          <div class="rl-stat">
+            <div class="rl-stat-value">PPO</div>
+            <div class="rl-stat-label">RL Algorithm</div>
+          </div>
+          <div class="rl-stat">
+            <div class="rl-stat-value" style="font-size:16px">≈Gemini 2.5 Flash</div>
+            <div class="rl-stat-label">Task Performance</div>
+          </div>
+        </div>
+
+        <div class="rl-feature-list">
+          <div class="rl-feature">
+            <div class="rl-feature-dot"></div>
+            <div>
+              <strong>Trained on real browser trajectories</strong>
+              <p>The model learns from actual page interactions — clicks, form fills, navigation — not synthetic data.</p>
+            </div>
+          </div>
+          <div class="rl-feature">
+            <div class="rl-feature-dot" style="background:#818cf8"></div>
+            <div>
+              <strong>Reward-shaped for web tasks</strong>
+              <p>Custom reward functions penalise hallucinations and reward precise element targeting and task completion.</p>
+            </div>
+          </div>
+          <div class="rl-feature">
+            <div class="rl-feature-dot" style="background:#f97316"></div>
+            <div>
+              <strong>Runs fully on-device</strong>
+              <p>1.7B parameters fit comfortably on consumer hardware via Ollama or llama.cpp — no cloud required.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- HuggingFace CTA card -->
+        <a href="https://huggingface.co/SalmanSi/Adaptive-Web-Interaction-RL" target="_blank" rel="noopener" class="hf-card">
+          <div class="hf-card-left">
+            <div class="hf-logo">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+                <text y="20" font-size="20" fill="#FFD21E">🤗</text>
+              </svg>
+            </div>
+            <div>
+              <div class="hf-card-title">Download on Hugging Face</div>
+              <div class="hf-card-sub">SalmanSi/Adaptive-Web-Interaction-RL</div>
+            </div>
+          </div>
+          <div class="hf-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ─────────────────────────────────────────── -->
+<section id="cta">
+  <div class="cta-inner reveal">
+    <div class="section-label" style="justify-content:center">Open Source</div>
+    <h2 class="cta-title">Built in the open.<br><em>For everyone.</em></h2>
+    <p class="cta-sub">WebSense is a Final Year Project built in the open. Explore the source, fine-tuned model, or install and try it yourself.</p>
+    <div class="cta-actions">
+      <a href="https://github.com/SalmanSi/FYP-WebNav-Agent" class="btn-primary" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"></path></svg>
+        GitHub Repo
+      </a>
+      <a href="https://huggingface.co/SalmanSi/Adaptive-Web-Interaction-RL" class="btn-secondary" target="_blank" rel="noopener" style="border-color:rgba(255,210,30,0.3);color:#FFD21E">
+        🤗 Hugging Face Model
+      </a>
+      <a href="#install" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Install Now
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────── -->
+<footer>
+  <div class="footer-brand">Web<span>Sense</span></div>
+  <div class="footer-copy">Autonomous Web Intelligence · FYP 2025–26</div>
+  <div class="footer-links">
+    <a href="#features">Features</a>
+    <a href="#model-ft">Model</a>
+    <a href="#install">Install</a>
+    <a href="https://github.com/SalmanSi/FYP-WebNav-Agent" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://huggingface.co/SalmanSi/Adaptive-Web-Interaction-RL" target="_blank" rel="noopener" style="color:#FFD21E">🤗 HuggingFace</a>
+  </div>
+</footer>
+
+<script>
+  // ── SCROLL REVEAL ───────────────────────────────────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0, rootMargin: '0px' });
+
+  // Show elements already in viewport immediately, observe the rest
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.reveal').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        el.classList.add('visible');
+      } else {
+        revealObserver.observe(el);
+      }
+    });
+  });
+
+  // ── NAV SCROLL HIGHLIGHT ────────────────────────────
+  const sections = ['hero','features','how','models','install','cta'];
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(a => {
+          a.style.color = '';
+          if (a.getAttribute('href') === '#' + id) {
+            a.style.color = 'var(--teal)';
+          }
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) navObserver.observe(el);
+  });
+
+  // ── STEPS INTERACTION ───────────────────────────────
+  const steps = document.querySelectorAll('.step');
+  steps.forEach(step => {
+    step.addEventListener('click', () => {
+      steps.forEach(s => s.classList.remove('active'));
+      step.classList.add('active');
+    });
+  });
+
+  // ── NAV BG on scroll ────────────────────────────────
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 40) {
+      nav.style.background = 'rgba(10, 18, 36, 0.95)';
+    } else {
+      nav.style.background = 'rgba(15, 23, 42, 0.85)';
+    }
+  }, { passive: true });
+
+  // ── TWEAKS PANEL ────────────────────────────────────
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accentColor": "#2bc8d4",
+    "darkMode": true,
+    "githubUrl": "https:\/\/github.com\/SalmanSi\/FYP-WebNav-Agent"
+  }/*EDITMODE-END*/;
+
+  let tweaks = { ...TWEAK_DEFAULTS };
+
+  window.addEventListener('message', (e) => {
+    if (e.data?.type === '__activate_edit_mode') showTweaks();
+    if (e.data?.type === '__deactivate_edit_mode') hideTweaks();
+  });
+
+  window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+  const tweakPanel = document.createElement('div');
+  tweakPanel.id = 'tweaks-panel';
+  tweakPanel.style.cssText = `
+    display:none; position:fixed; bottom:24px; right:24px; z-index:9999;
+    background:#1e293b; border:1px solid rgba(45,212,191,0.3); border-radius:16px;
+    padding:20px; width:260px; box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    font-family:'DM Sans',sans-serif; color:#e2e8f0;
+  `;
+  tweakPanel.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#f8fafc">Tweaks</span>
+      <button id="tweaks-close" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;display:block;margin-bottom:6px">Accent Color</label>
+        <input id="tw-accent" type="color" value="${tweaks.accentColor}" style="width:100%;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#0f172a;cursor:pointer;padding:2px" />
+      </div>
+      <div>
+        <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;display:block;margin-bottom:6px">GitHub URL</label>
+        <input id="tw-github" type="text" value="${tweaks.githubUrl}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:#0f172a;color:#e2e8f0;font-size:12px;font-family:monospace" />
+      </div>
+    </div>
+  `;
+  document.body.appendChild(tweakPanel);
+
+  document.getElementById('tweaks-close').addEventListener('click', () => {
+    hideTweaks();
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  });
+
+  document.getElementById('tw-accent').addEventListener('input', (e) => {
+    tweaks.accentColor = e.target.value;
+    document.documentElement.style.setProperty('--teal', e.target.value);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { accentColor: e.target.value } }, '*');
+  });
+
+  document.getElementById('tw-github').addEventListener('change', (e) => {
+    tweaks.githubUrl = e.target.value;
+    document.querySelectorAll('a[href*="github"]').forEach(a => a.href = e.target.value);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { githubUrl: e.target.value } }, '*');
+  });
+
+  function showTweaks() { tweakPanel.style.display = 'block'; }
+  function hideTweaks() { tweakPanel.style.display = 'none'; }
+
+  // Apply saved tweaks on load
+  document.documentElement.style.setProperty('--teal', tweaks.accentColor);
+  document.querySelectorAll('a[href*="your-repo"]').forEach(a => a.href = tweaks.githubUrl);
+
+  // ── EXT TAB SWITCHING ──────────────────────────────────────
+  const extTabs = document.querySelectorAll('[data-ext-tab]');
+  const extViews = { chat: document.getElementById('ext-view-chat'), history: document.getElementById('ext-view-history'), settings: document.getElementById('ext-view-settings') };
+  let currentExtTab = 'chat';
+  let demoRunning = true;
+
+  extTabs.forEach(tab => {
+    tab.style.cursor = 'pointer';
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.extTab;
+      if (target === currentExtTab) return;
+      currentExtTab = target;
+
+      // Update tab styles
+      extTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      // Show/hide views
+      Object.entries(extViews).forEach(([key, el]) => {
+        el.style.display = key === target ? 'flex' : 'none';
+      });
+
+      // Pause/resume demo when leaving/entering chat
+      demoRunning = (target === 'chat');
+    });
+  });
+
+  // Ollama toggle in settings
+  const ollamaToggle = document.getElementById('ext-ollama-toggle');
+  const ollamaLabel = document.getElementById('ext-ollama-label');
+  let ollamaOn = true;
+  if (ollamaToggle) {
+    ollamaToggle.addEventListener('click', () => {
+      ollamaOn = !ollamaOn;
+      ollamaToggle.style.background = ollamaOn ? '#2563eb' : '#cbd5e1';
+      ollamaToggle.querySelector('div').style.left = ollamaOn ? '15px' : '2px';
+      ollamaLabel.textContent = ollamaOn ? 'Enabled — agent uses Ollama' : 'Disabled — agent uses OpenRouter';
+    });
+  }
+
+  // ── EXTENSION MOCKUP DEMO ANIMATION ────────────────────────
+  const extProgress = document.getElementById('ext-progress');
+  const extStageLoad = document.getElementById('ext-stage-load');
+  const extStageThink = document.getElementById('ext-stage-think');
+  const extStageAct = document.getElementById('ext-stage-act');
+  const extChatEmpty = document.getElementById('ext-chat-empty');
+  const extChatFeed = document.getElementById('ext-chat-feed');
+  const extSendBtn = document.getElementById('ext-send-btn');
+  const extTaskInput = document.getElementById('ext-task-input');
+  const extIdleBadge = document.querySelector('.ext-idle-badge');
+  const extStatusText = document.querySelector('.ext-status-row span');
+  const extStatusDot = document.querySelector('.ext-status-dot');
+
+  const chatMessages = [
+    { role: 'user', text: 'Find the latest release and summarize the changelog' },
+    { role: 'agent', text: 'Navigating to the releases page…', delay: 900 },
+    { role: 'agent', text: 'Found v2.1.0 — clicking to open…', delay: 1600 },
+    { role: 'agent', text: '✓ Done! Key changes: performance fixes, new Ollama support, UI refresh.', delay: 2400, success: true },
+  ];
+
+  function addExtChatBubble(role, text, success) {
+    extChatEmpty.style.display = 'none';
+    extChatFeed.style.display = 'flex';
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:7px;align-items:flex-start;';
+    const avatar = document.createElement('div');
+    avatar.style.cssText = `
+      width:24px;height:24px;border-radius:7px;font-size:9px;font-weight:700;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      background:${role === 'user' ? 'rgba(99,102,241,0.15)' : 'rgba(37,99,235,0.12)'};
+      color:${role === 'user' ? '#6366f1' : '#2563eb'};
+    `;
+    avatar.textContent = role === 'user' ? 'You' : 'AI';
+    const bubble = document.createElement('div');
+    bubble.style.cssText = `
+      padding:7px 10px;border-radius:${role === 'user' ? '10px 10px 2px 10px' : '10px 10px 10px 2px'};
+      font-size:11px;line-height:1.5;
+      background:${success ? 'rgba(37,99,235,0.1)' : role === 'user' ? 'rgba(99,102,241,0.1)' : 'rgba(248,250,252,0.95)'};
+      color:${success ? '#1d4ed8' : '#475569'};
+      border:1px solid ${success ? 'rgba(37,99,235,0.15)' : 'rgba(15,23,42,0.06)'};
+      max-width:220px;
+    `;
+    bubble.textContent = text;
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    extChatFeed.appendChild(row);
+  }
+
+  function resetExtDemo() {
+    extChatFeed.innerHTML = '';
+    extChatFeed.style.display = 'none';
+    extChatEmpty.style.display = 'block';
+    extProgress.style.width = '8%';
+    extProgress.style.background = 'linear-gradient(90deg, #2563eb, #38bdf8)';
+    [extStageLoad, extStageThink, extStageAct].forEach(s => s.classList.remove('act'));
+    extIdleBadge.textContent = 'Idle';
+    extIdleBadge.style.background = 'rgba(37,99,235,0.1)';
+    extIdleBadge.style.color = '#2563eb';
+    extStatusText.textContent = 'Ready for your next task.';
+    extStatusDot.style.background = '#cbd5e1';
+    extTaskInput.textContent = 'Write a task for the agent to perform';
+    extTaskInput.style.color = '#94a3b8';
+  }
+
+  const waitOrPause = (ms) => new Promise(r => {
+    let elapsed = 0;
+    const step = 80;
+    const tick = () => {
+      if (!demoRunning) { setTimeout(tick, 200); return; }
+      elapsed += step;
+      if (elapsed >= ms) r(); else setTimeout(tick, step);
+    };
+    setTimeout(tick, step);
+  });
+
+  async function runExtDemo() {
+    await waitOrPause(400);
+    if (!demoRunning) { setTimeout(runExtDemo, 500); return; }
+
+    // Type the task
+    const task = 'Find the latest release and summarize the changelog';
+    extTaskInput.textContent = '';
+    extTaskInput.style.color = '#334155';
+    for (let i = 0; i <= task.length; i++) {
+      if (!demoRunning) break;
+      extTaskInput.textContent = task.slice(0, i) + (i < task.length ? '|' : '');
+      await new Promise(r => setTimeout(r, 28));
+    }
+    extTaskInput.textContent = task;
+    await waitOrPause(400);
+
+    // Send
+    extSendBtn.style.transform = 'scale(0.95)';
+    await new Promise(r => setTimeout(r, 150));
+    extSendBtn.style.transform = '';
+
+    // Loading phase
+    extIdleBadge.textContent = 'Loading';
+    extStatusDot.style.background = '#2563eb';
+    extStatusText.textContent = 'Capturing page…';
+    extStageLoad.classList.add('act');
+    extProgress.style.width = '25%';
+    await waitOrPause(700);
+
+    // Thinking phase
+    extIdleBadge.textContent = 'Thinking';
+    extStatusText.textContent = 'Reasoning about the task…';
+    extStageLoad.classList.remove('act');
+    extStageThink.classList.add('act');
+    extProgress.style.width = '60%';
+    await waitOrPause(800);
+
+    // Acting phase
+    extIdleBadge.textContent = 'Acting';
+    extStatusText.textContent = 'Executing steps…';
+    extStageThink.classList.remove('act');
+    extStageAct.classList.add('act');
+    extProgress.style.width = '85%';
+
+    // Chat messages
+    for (const msg of chatMessages) {
+      await waitOrPause(msg.delay ? 500 : 250);
+      addExtChatBubble(msg.role, msg.text, msg.success);
+    }
+
+    await waitOrPause(600);
+    extProgress.style.width = '100%';
+    extProgress.style.background = 'linear-gradient(90deg, #16a34a, #4ade80)';
+    extIdleBadge.textContent = 'Done';
+    extIdleBadge.style.background = 'rgba(22,163,74,0.12)';
+    extIdleBadge.style.color = '#16a34a';
+    extStatusText.textContent = 'Task completed successfully.';
+    extStatusDot.style.background = '#22c55e';
+
+    // Reset after pause
+    await waitOrPause(3200);
+    resetExtDemo();
+    await waitOrPause(1200);
+    runExtDemo();
+  }
+
+  // ── PARTICLE CANVAS ─────────────────────────────────────────
+  (function() {
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = rand(0, W);
+        this.y = rand(0, H);
+        this.vx = rand(-0.15, 0.15);
+        this.vy = rand(-0.3, -0.05);
+        this.r = rand(0.8, 2.2);
+        this.alpha = rand(0.2, 0.7);
+        this.life = rand(60, 180);
+        this.age = 0;
+        const palette = ['rgba(45,212,191,', 'rgba(129,140,248,', 'rgba(56,189,248,'];
+        this.color = palette[Math.floor(Math.random() * palette.length)];
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.age++;
+        if (this.age > this.life || this.y < -10) this.reset();
+      }
+      draw() {
+        const t = this.age / this.life;
+        const a = this.alpha * (t < 0.1 ? t * 10 : t > 0.8 ? (1 - t) * 5 : 1);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.color + a + ')';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 80; i++) {
+      const p = new Particle();
+      p.age = Math.floor(Math.random() * p.life);
+      particles.push(p);
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  })();
+
+  // ── HERO TITLE WORD REVEAL ───────────────────────────────────
+  // Use a TreeWalker so we only touch text nodes, never HTML tags
+  (function() {
+    const title = document.querySelector('.hero-title');
+    if (!title) return;
+    let wordIdx = 0;
+    const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT, null);
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) textNodes.push(node);
+    textNodes.forEach(tn => {
+      const frag = document.createDocumentFragment();
+      tn.textContent.split(/(\s+)/).forEach(part => {
+        if (!part.trim()) {
+          frag.appendChild(document.createTextNode(part));
+        } else {
+          const span = document.createElement('span');
+          span.className = 'word';
+          span.style.animationDelay = (wordIdx++ * 0.09 + 0.1).toFixed(2) + 's';
+          span.textContent = part;
+          frag.appendChild(span);
+        }
+      });
+      tn.parentNode.replaceChild(frag, tn);
+    });
+  })();
+</script><div id="tweaks-panel" style="display: none; position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: rgb(30, 41, 59); border: 1px solid rgba(45, 212, 191, 0.3); border-radius: 16px; padding: 20px; width: 260px; box-shadow: rgba(0, 0, 0, 0.5) 0px 20px 60px; font-family: &quot;DM Sans&quot;, sans-serif; color: rgb(226, 232, 240);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#f8fafc">Tweaks</span>
+      <button id="tweaks-close" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;display:block;margin-bottom:6px">Accent Color</label>
+        <input id="tw-accent" type="color" value="#2bc8d4" style="width:100%;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#0f172a;cursor:pointer;padding:2px">
+      </div>
+      <div>
+        <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;display:block;margin-bottom:6px">GitHub URL</label>
+        <input id="tw-github" type="text" value="https://github.com/SalmanSi/FYP-WebNav-Agent" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:#0f172a;color:#e2e8f0;font-size:12px;font-family:monospace">
+      </div>
+    </div>
+  </div>
+
+
+</body></html>
