@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebSense — Autonomous Web Intelligence</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,9 +23,9 @@
       --border:     rgba(255,255,255,0.07);
       --border-teal:rgba(45, 212, 191, 0.22);
       --card-bg:    rgba(30, 41, 59, 0.7);
-      --font-display: 'Syne', system-ui, sans-serif;
-      --font-body:    'DM Sans', system-ui, sans-serif;
-      --font-mono:    'DM Mono', monospace;
+      --font-display: Calibri, Carlito, 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      --font-body:    Calibri, Carlito, 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      --font-mono:    ui-monospace, SFMono-Regular, Consolas, Menlo, monospace;
     }
 
     html { scroll-behavior: smooth; }
@@ -365,7 +362,7 @@
         0 40px 80px rgba(0,0,0,0.45),
         0 0 0 1px rgba(43,200,212,0.15),
         inset 0 1px 0 rgba(255,255,255,0.9);
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-body);
     }
 
     /* Header */
@@ -399,7 +396,7 @@
     }
 
     .ext-brand-name {
-      font-family: 'Syne', sans-serif;
+      font-family: var(--font-display);
       font-size: 15px;
       font-weight: 700;
       color: #1e293b;
@@ -526,7 +523,7 @@
     }
 
     .ext-panel-title {
-      font-family: 'Syne', sans-serif;
+      font-family: var(--font-display);
       font-size: 13px;
       font-weight: 700;
       color: #1e293b;
@@ -604,7 +601,7 @@
       color: #94a3b8;
       line-height: 1.5;
       min-height: 70px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-body);
     }
 
     .ext-actions {
@@ -1677,7 +1674,7 @@
     }
   </style>
 </head>
-<body style="font-family: &quot;DM Mono&quot;;">
+<body>
 
 <!-- Background elements -->
 <div class="hero-grid-bg"></div>
@@ -1873,7 +1870,7 @@
             <div class="ext-panel-sub" style="margin-bottom:10px">All models via OpenRouter — one API key, hundreds of models.</div>
             <div class="ext-field-label">Model (OpenRouter ID)</div>
             <div class="ext-settings-input" style="display:flex;gap:6px;margin-bottom:6px">
-              <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;font-family:'DM Mono',monospace">openai/gpt-4o</div>
+              <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;font-family:var(--font-mono)">openai/gpt-4o</div>
             </div>
             <div style="background:rgba(226,232,240,0.4);border-radius:8px;padding:8px 10px;font-size:10px;color:#64748b">Type any OpenRouter model ID or pick from suggestions.</div>
           </div>
@@ -1888,7 +1885,7 @@
                 <span style="font-size:11px;color:#16a34a;font-weight:600">✓ Saved</span>
               </div>
               <div style="display:flex;gap:6px;">
-                <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#94a3b8;font-family:'DM Mono',monospace">sk-or-v1-••••••••••••••</div>
+                <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#94a3b8;font-family:var(--font-mono)">sk-or-v1-••••••••••••••</div>
                 <div style="padding:8px 12px;border-radius:10px;background:rgba(37,99,235,0.12);color:#1d4ed8;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">Save</div>
               </div>
             </div>
@@ -1908,12 +1905,12 @@
             </div>
             <div class="ext-field-label">Ollama URL</div>
             <div style="display:flex;gap:6px;margin-bottom:8px">
-              <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;font-family:'DM Mono',monospace">http://localhost:11434</div>
+              <div style="flex:1;background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;font-family:var(--font-mono)">http://localhost:11434</div>
               <div style="padding:8px 10px;border-radius:10px;background:rgba(37,99,235,0.12);color:#1d4ed8;font-size:11px;font-weight:600;cursor:pointer">Connect</div>
             </div>
             <div class="ext-field-label">Model</div>
             <div style="background:rgba(248,250,252,0.9);border:1px solid rgba(15,23,42,0.08);border-radius:10px;padding:8px 10px;font-size:11px;color:#334155;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <span style="font-family:'DM Mono',monospace">qwen2.5:0.5b</span>
+              <span style="font-family:var(--font-mono)">qwen2.5:0.5b</span>
               <span style="color:#94a3b8;font-size:10px">▾</span>
             </div>
             <div class="ext-field-label">Use for agent tasks</div>
@@ -2472,11 +2469,11 @@
     display:none; position:fixed; bottom:24px; right:24px; z-index:9999;
     background:#1e293b; border:1px solid rgba(45,212,191,0.3); border-radius:16px;
     padding:20px; width:260px; box-shadow:0 20px 60px rgba(0,0,0,0.5);
-    font-family:'DM Sans',sans-serif; color:#e2e8f0;
+    font-family:var(--font-body); color:#e2e8f0;
   `;
   tweakPanel.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#f8fafc">Tweaks</span>
+      <span style="font-family:var(--font-display);font-weight:700;font-size:14px;color:#f8fafc">Tweaks</span>
       <button id="tweaks-close" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;line-height:1">×</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
@@ -2787,9 +2784,9 @@
       tn.parentNode.replaceChild(frag, tn);
     });
   })();
-</script><div id="tweaks-panel" style="display: none; position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: rgb(30, 41, 59); border: 1px solid rgba(45, 212, 191, 0.3); border-radius: 16px; padding: 20px; width: 260px; box-shadow: rgba(0, 0, 0, 0.5) 0px 20px 60px; font-family: &quot;DM Sans&quot;, sans-serif; color: rgb(226, 232, 240);">
+</script><div id="tweaks-panel" style="display: none; position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: rgb(30, 41, 59); border: 1px solid rgba(45, 212, 191, 0.3); border-radius: 16px; padding: 20px; width: 260px; box-shadow: rgba(0, 0, 0, 0.5) 0px 20px 60px; font-family: var(--font-body); color: rgb(226, 232, 240);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#f8fafc">Tweaks</span>
+      <span style="font-family:var(--font-display);font-weight:700;font-size:14px;color:#f8fafc">Tweaks</span>
       <button id="tweaks-close" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;line-height:1">×</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
